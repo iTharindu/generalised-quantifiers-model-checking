@@ -204,3 +204,45 @@ def parse_args():
 
     return args
 
+class CustomDataset(Dataset):
+
+    def __init__(self, dataframe, tokenizer, max_len):
+        self.tokenizer = tokenizer
+        self.data = dataframe
+        self.model_nl = dataframe.model_nl
+        self.sentences = dataframe.sentence 
+        self.targets = self.data.validity 
+        self.max_len = max_len
+
+    def __len__(self):
+        return len(self.sentences)
+
+    def __getitem__(self, index):
+        sentences = str(self.sentences[index])
+        sentences = " ".join(sentences.split("-"))
+        sentences = " ".join(sentences.split("_"))
+
+        model_nl = str(self.model_nl[index])
+        model_nl = " ".join(model_nl.split("-"))
+        model_nl = " ".join(model_nl.split("_"))
+
+        inputs = self.tokenizer.encode_plus(
+            model_nl,
+            sentences,
+            add_special_tokens=True,
+            max_length=self.max_len,
+            padding="max_length",
+            return_token_type_ids=True,
+            truncation=False
+        )
+        ids = inputs['input_ids']
+        mask = inputs['attention_mask']
+        token_type_ids = inputs["token_type_ids"]
+
+
+        return {
+            'ids': torch.tensor(ids, dtype=torch.long),
+            'mask': torch.tensor(mask, dtype=torch.long),
+            'token_type_ids': torch.tensor(token_type_ids, dtype=torch.long),
+            'targets': torch.tensor(self.targets[index], dtype=torch.float)
+        }

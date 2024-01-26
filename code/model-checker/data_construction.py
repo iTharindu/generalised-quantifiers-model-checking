@@ -13,6 +13,7 @@ from itertools import chain, combinations
 from tqdm import tqdm
 from fractions import Fraction
 from sklearn.model_selection import train_test_split
+import argparse
 
 
 
@@ -54,6 +55,107 @@ nouns = [
     "advisors", "wrestlers", "fighters", "boxers", "beekeepers", "musicians", "dj_artists", "violinists",
     "conductors", "gymnasts"
 ]
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Construct Model Checking dataset")
+
+    parser.add_argument(
+        "--num_of_datapoints",
+        type=int,
+        default=9000,
+        help=(
+            "number of total datapoints. For each quantifier in the quantifier list, n/q amount of data points will be constucted, where n is the number of datapoint and q is the number of quantifiers"
+        ),
+    )
+
+    parser.add_argument(
+        "--min_dom",
+        type=int,
+        default=8,
+        help=(
+            "minimum number of domain elements"
+        ),
+    )
+
+    parser.add_argument(
+        "--max_dom",
+        type=int,
+        default=14,
+        help=(
+            "maximum number of domain elements"
+        ),
+    )
+
+    parser.add_argument(
+        "--min_pred",
+        type=int,
+        default=5,
+        help=(
+            "minimum number of predicates"
+        ),
+    )
+
+    parser.add_argument(
+        "--max_pred",
+        type=int,
+        default=10,
+        help=(
+            "maximum number of predicates"
+        ),
+    )
+
+    parser.add_argument(
+        "--min_assignment",
+        type=int,
+        default=0,
+        help=(
+            "minimum number of doamin elements assign to a predicate"
+        ),
+    )
+
+    parser.add_argument(
+        "--max_assignment",
+        type=int,
+        default=14,
+        help=(
+            "maximum number of doamin elements assign to a predicate"
+        ),
+    )
+
+    parser.add_argument(
+        "--min_num",
+        type=int,
+        default=14,
+        help=(
+            "maximum K value"
+        ),
+    )
+
+    parser.add_argument(
+        "--max_num",
+        type=int,
+        default=14,
+        help=(
+            "maximum K value"
+        ),
+    )
+
+    parser.add_argument(
+        "--boolean_coordinates",
+        type=int,
+        default=0,
+        help=(
+            "number of boolean coordiantes in the sentence"
+        ),
+    )
+
+    parser.add_argument(
+        '--quantifiers', nargs='+', help='<Required> Set flag', required=True)
+
+    args = parser.parse_args()
+
+    return args
 
 class ConstructModel:
 

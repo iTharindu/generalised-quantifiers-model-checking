@@ -126,7 +126,7 @@ def parse_args():
     parser.add_argument(
         "--min_num",
         type=int,
-        default=14,
+        default=5,
         help=(
             "maximum K value"
         ),
@@ -152,6 +152,15 @@ def parse_args():
 
     parser.add_argument(
         '--quantifiers', nargs='+', help='<Required> Set flag', required=True)
+    
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        default='output.csv',
+        help=(
+            "output file name"
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -520,8 +529,19 @@ class ConstructDataSet:
 
 if __name__ == "__main__":
 
-    #args = parse_args()
-    Data = ConstructDataSet(9000, ['At most', 'At least', 'Equal', 'More than', 'Less than', 'Most', 'Few', 'All', 'Some'], min_dom = 8, max_dom = 14, min_pred = 5, max_pred = 10, boolean_coordinates=0)
-    df = Data.const_df(names, nouns, min_assignment=0, max_assignment=14, min_num = 1, max_num = 14)
+    args = parse_args()
+    Data = ConstructDataSet(9000, 
+                            args.quantifiers, 
+                            min_dom = args.min_dom, 
+                            max_dom = args.max_dom, 
+                            min_pred = args.min_pred, 
+                            max_pred = args.max_pred, 
+                            boolean_coordinates=args.boolean_coordinates)
+    df = Data.const_df(names, 
+                       nouns, 
+                       min_assignment=args.min_assignment, 
+                       max_assignment=args.max_assignment, 
+                       min_num = args.min_num, 
+                       max_num = args.max_num)
 
-    df.to_csv('output.csv', index = False)
+    df.to_csv(args.output_file, index = False)
